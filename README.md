@@ -1,6 +1,6 @@
-# PHYS 5070 Final Project: Higgs Boson Tagger
+# PHYS 5070 Final Project: Higgs Boson (H->bb) Tagger
 
-## Libraries Used
+## Dependencies
 - [uproot](https://uproot.readthedocs.io/en/latest/index.html#)
   - I think that XRootD is automatically installed with this, but just in case you can install that [here](https://pypi.org/project/xrootd/)
 - [numpy](https://numpy.org/)
@@ -11,7 +11,7 @@
 
 ## How to Run
 
-### Step 1: Generate Training Data
+### Step 1: Generate Training and Test Data
 ```bash
 python buildDataSets.py
 ```
