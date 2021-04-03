@@ -84,7 +84,7 @@ def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
 
     # Remove unecessary dimensions
     X_out = np.asarray(X).reshape(-1, np.asarray(X).shape[-1])
-    y_out = np.asarray(y).reshape(-1, np.asarray(y).shape[-1])
+    y_out = np.asarray(y).flatten()
     spects_out = np.asarray(spects).reshape(-1, np.asarray(spects).shape[-1])
     
     return X_out, y_out, spects_out
@@ -119,16 +119,16 @@ def main():
                 'label_H_bb',
             ]
 
-    # Load and format datasets
+    # Load, format, and save datasets
     X_train, y_train, spects_train = loadRemoteData(nTrainFiles, features, spectators, labels, filetype='Train')
-    X_test, y_test, spects_test = loadRemoteData(nTestFiles, features, spectators, labels, filetype='Test')
 
-    # Save to pickle files
     train_data = (X_train, y_train, spects_train)
     pickle_filename = 'Data/train_data.pickle'
     with open(pickle_filename, 'wb') as file:
         pkl.dump(train_data, file)
     print(f"\nTraining data saved to '{pickle_filename}'")
+    
+    X_test, y_test, spects_test = loadRemoteData(nTestFiles, features, spectators, labels, filetype='Test')
 
     test_data = (X_test, y_test, spects_test)
     pickle_filename = 'Data/test_data.pickle'
