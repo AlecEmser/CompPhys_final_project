@@ -2,10 +2,11 @@ import uproot
 import numpy as np
 import pandas as pd
 import pickle as pkl
+from tqdm import trange
 
 def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
-    """Loads remote data files from CMS OpenData and formats into 
-       feature vectors (X), output labels (y), and spectator variables (spect)
+    """Loads remote data files from CMS OpenData and formats into feature 
+       vectors (X), output labels (y), and spectator variables (spect)
 
     Args:
         nFiles (int): Number of root files to process
@@ -15,7 +16,8 @@ def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
         filetype (str, optional): Specification if data is for training or testing. Defaults to None.
 
     Raises:
-        Exception: ValueError raised if filetype isn't correctly specified
+        Exception: ValueError raised if filetype isn't correctly specifiedor 
+                   nFiles isn't in allowed range
 
     Returns:
         X_out (ndarray): 2D array of feature vectors
@@ -25,21 +27,28 @@ def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
 
     # Choose from training or testing datasets
     if 'Train' in filetype:
-        filerange = [9,10+nFiles]
-        file_label = 'train'
+        if 0 < nFiles <= 82:
+            filerange = [9,9+nFiles]
+            file_label = 'train'
+        else:
+            raise ValueError(f'loadRemoteData: For Training data nFiles must be in range [1,82]')
     elif 'Test' in filetype:
-        filerange = [0,1+nFiles]
-        file_label = 'test'
+        if 0 < nFiles <= 9:
+            filerange = [0,nFiles]
+            file_label = 'test'
+        else:
+            raise ValueError(f'loadRemoteData: For Testing data nFiles must be in range [1,9]')
     else:
         valid = ['Train', 'Test']
-        raise ValueError(f'loadRemoteData: filetype mist be one of {valid}')
+        raise ValueError(f'loadRemoteData: filetype must be one of {valid}')
 
     X = []
     y = []
     spects = []
 
     # Iterate through chosen number of samples and combine datasets
-    for i in range(filerange[0],filerange[1]):
+    print(f"\nIterating through {file_label}ing data files...")
+    for i in trange(filerange[0],filerange[1]):
         # Read in file with uproot
         with uproot.open(f'root://eospublic.cern.ch//eos/opendata/cms/datascience/HiggsToBBNtupleProducerTool/HiggsToBBNTuple_HiggsToBB_QCD_RunII_13TeV_MC/{file_label}/ntuple_merged_{i}.root') as file:
             tree = file["deepntuplizer/tree"]
@@ -74,17 +83,17 @@ def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
         spects.append(file_spects)
 
     # Remove unecessary dimensions
-    X_out = np.squeeze(np.asarray(X))
-    y_out = np.squeeze(np.asarray(y))
-    spects_out = np.squeeze(np.asarray(spects))
+    X_out = np.asarray(X).reshape(-1, np.asarray(X).shape[-1])
+    y_out = np.asarray(y).reshape(-1, np.asarray(y).shape[-1])
+    spects_out = np.asarray(spects).reshape(-1, np.asarray(spects).shape[-1])
     
     return X_out, y_out, spects_out
 
 def main():
 
     # Select number of files to generate training and testing data
-    nTrainFiles = 1
-    nTestFiles = 1
+    nTrainFiles = 10
+    nTestFiles = 5
 
     # Select features for model to process
     features = [

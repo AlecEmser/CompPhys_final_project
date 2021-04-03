@@ -8,6 +8,7 @@
 - [pickle](https://docs.python.org/3/library/pickle.html)
 - [scikit-learn](https://scikit-learn.org/stable/index.html)
 - [keras](https://keras.io/)
+- [tqdm](https://github.com/tqdm/tqdm)
 
 ## How to Run
 
