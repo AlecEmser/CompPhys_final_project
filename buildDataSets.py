@@ -1,23 +1,38 @@
+import argparse
 import uproot
 import numpy as np
 import pandas as pd
 import pickle as pkl
 from tqdm import trange
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Loads and formats input data for Hbb classifier (takes ~45-60s per file).')
+    parser.add_argument('--ntrain',
+                       type=int,
+                       choices=range(1,83),
+                       metavar="[1-83]",
+                       help='Number of training files to process')
+    parser.add_argument('--ntest',
+                       type=int,
+                       choices=range(1,10),
+                       metavar="[1-9]",
+                       help='Number of training files to process')
+    args = parser.parse_args()
+    return args
+
 def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
     """Loads remote data files from CMS OpenData and formats into feature 
        vectors (X), output labels (y), and spectator variables (spect)
 
     Args:
-        nFiles (int): Number of root files to process
+        nFiles (int): Number of ROOT files to process
         features (list of str): Features chosen to use in model
-        spectators (list of str): 'Spectator' variables to used to visualize model output
+        spectators (list of str): 'Spectator' variables used to assess model output
         labels (list of str): Output label used for training
         filetype (str, optional): Specification if data is for training or testing. Defaults to None.
 
     Raises:
-        Exception: ValueError raised if filetype isn't correctly specifiedor 
-                   nFiles isn't in allowed range
+        Exception: ValueError raised if filetype isn't correctly specified
 
     Returns:
         X_out (ndarray): 2D array of feature vectors
@@ -27,17 +42,11 @@ def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
 
     # Choose from training or testing datasets
     if 'Train' in filetype:
-        if 0 < nFiles <= 82:
-            filerange = [9,9+nFiles]
-            file_label = 'train'
-        else:
-            raise ValueError(f'loadRemoteData: For Training data nFiles must be in range [1,82]')
+        filerange = [9,9+nFiles]
+        file_label = 'train'
     elif 'Test' in filetype:
-        if 0 < nFiles <= 9:
-            filerange = [0,nFiles]
-            file_label = 'test'
-        else:
-            raise ValueError(f'loadRemoteData: For Testing data nFiles must be in range [1,9]')
+        filerange = [0,nFiles]
+        file_label = 'test'
     else:
         valid = ['Train', 'Test']
         raise ValueError(f'loadRemoteData: filetype must be one of {valid}')
@@ -89,21 +98,17 @@ def loadRemoteData(nFiles, features, spectators, labels, filetype=None):
     
     return X_out, y_out, spects_out
 
-def main():
-
-    # Select number of files to generate training and testing data
-    nTrainFiles = 10
-    nTestFiles = 5
+def main(args):
 
     # Select features for model to process
     features = [
-                'fj_jetNTracks',
-                'fj_nSV',
-                'fj_trackSipdSig_0',
-                'fj_trackSipdSig_1',
-                'fj_trackSipdSig_2',
-                'fj_trackSipdSig_3',
-                'fj_z_ratio',
+                    'fj_jetNTracks',
+                    'fj_nSV',
+                    'fj_trackSipdSig_0',
+                    'fj_trackSipdSig_1',
+                    'fj_trackSipdSig_2',
+                    'fj_trackSipdSig_3',
+                    'fj_z_ratio',
                 ]
 
     # Select variables to plot performance
@@ -114,28 +119,30 @@ def main():
 
     # Select variables to use as labels
     labels = [  
-                'fj_isQCD',
-                'sample_isQCD',
-                'label_H_bb',
+                    'fj_isQCD',
+                    'sample_isQCD',
+                    'label_H_bb',
             ]
 
-    # Load, format, and save datasets
-    X_train, y_train, spects_train = loadRemoteData(nTrainFiles, features, spectators, labels, filetype='Train')
+    # Load, format, and save training dataset
+    X_train, y_train, spects_train = loadRemoteData(args.ntrain, features, spectators, labels, filetype='Train')
 
     train_data = (X_train, y_train, spects_train)
-    pickle_filename = 'Data/train_data.pickle'
-    with open(pickle_filename, 'wb') as file:
+    train_filename = 'Data/train_data.pickle'
+    with open(train_filename, 'wb') as file:
         pkl.dump(train_data, file)
-    print(f"\nTraining data saved to '{pickle_filename}'")
+    print(f"\nTraining data saved to '{train_filename}'")
     
-    X_test, y_test, spects_test = loadRemoteData(nTestFiles, features, spectators, labels, filetype='Test')
+    # Load, format, and save training dataset
+    X_test, y_test, spects_test = loadRemoteData(args.ntest, features, spectators, labels, filetype='Test')
 
     test_data = (X_test, y_test, spects_test)
-    pickle_filename = 'Data/test_data.pickle'
-    with open(pickle_filename, 'wb') as file:
+    test_filename = 'Data/test_data.pickle'
+    with open(test_filename, 'wb') as file:
         pkl.dump(test_data, file)
-    print(f"\nTest data saved to '{pickle_filename}'")
+    print(f"\nTest data saved to '{test_filename}'")
 
 
 if __name__=='__main__':
-    main()
+    args = parse_args()
+    main(args)

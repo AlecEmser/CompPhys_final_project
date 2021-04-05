@@ -14,7 +14,7 @@
 
 ### Step 1: Generate Training and Test Data
 ```bash
-python buildDataSets.py
+python buildDataSets.py --ntrain <# of files for training dataset> --ntest <# of files for testing dataset>
 ```
 ### Step 3: Train Models
 ```bash
