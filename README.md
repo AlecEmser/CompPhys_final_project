@@ -13,12 +13,19 @@
 ## How to Run
 
 ### Step 1: Generate Training and Test Data
-```bash
-python buildDataSets.py --ntrain <Number of files for training dataset> --ntest <Number of files for testing dataset>
+```shell
+python buildDataSets.py --ntrain <Number of files training dataset> --ntest <Number of files for testing dataset>
 ```
 ### Step 3: Train Models
-```bash
-python trainNNModel.py
+```shell
+python trainNNModel.py -nd <Number of examples to run in debug mode> -gs 
+```
+Arguments:
+```
+-nd --ndebug       Run training with limited number of examples in data 
+
+-gs --gridsearch   [Optional] Run training with exhaustive gridsearch to optimize meta-parameters
+
 ```
 ### Step 3: Check Model Accuracy
 TBD
