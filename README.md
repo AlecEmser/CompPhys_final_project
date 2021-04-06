@@ -27,11 +27,9 @@ Arguments:
 ```shell
 python trainNNModel.py -nd 20 -gs 
 ```
-Arguments:
+Optional Arguments:
 ```
 -nd --ndebug       Run miniature training with selected number of examples in data 
-
-[Optional]
 
 -gs --gridsearch   Run training with exhaustive gridsearch to optimize meta-parameters
 
