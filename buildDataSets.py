@@ -45,10 +45,10 @@ def load_remote_data(nFiles, features, spectators, labels, filetype=None):
 
     # Choose from training or testing datasets
     if 'Train' in filetype:
-        filerange = [9, 9+nFiles]
+        filerange = (9, 9+nFiles)
         file_label = 'train'
     elif 'Test' in filetype:
-        filerange = [0, nFiles]
+        filerange = (0, nFiles)
         file_label = 'test'
     else:
         valid = ['Train', 'Test']
@@ -60,7 +60,7 @@ def load_remote_data(nFiles, features, spectators, labels, filetype=None):
 
     # Iterate through chosen number of samples and combine datasets
     print(f"\nIterating through {file_label}ing data files...")
-    for i in trange(filerange[0], filerange[1]):
+    for i in trange(*filerange):
         # Read in file with uproot
         with uproot.open(f'root://eospublic.cern.ch//eos/opendata/cms/datascience/HiggsToBBNtupleProducerTool/HiggsToBBNTuple_HiggsToBB_QCD_RunII_13TeV_MC/{file_label}/ntuple_merged_{i}.root') as file:
             tree = file["deepntuplizer/tree"]
@@ -110,8 +110,28 @@ def main(args):
     features = [
         'fj_jetNTracks',
         'fj_nSV',
+        'fj_tau0_trackEtaRel_0',
+        'fj_tau0_trackEtaRel_1',
+        'fj_tau0_trackEtaRel_2',
+        'fj_tau1_trackEtaRel_0',
+        'fj_tau1_trackEtaRel_1',
+        'fj_tau1_trackEtaRel_2',
+        'fj_tau_flightDistance2dSig_0',
+        'fj_tau_flightDistance2dSig_1',
+        'fj_tau_vertexDeltaR_0',
+        'fj_tau_vertexEnergyRatio_0',
+        'fj_tau_vertexEnergyRatio_1',
+        'fj_tau_vertexMass_0',
+        'fj_tau_vertexMass_1',
+        'fj_trackSip2dSigAboveBottom_0',
+        'fj_trackSip2dSigAboveBottom_1',
+        'fj_trackSip2dSigAboveCharm_0',
         'fj_trackSipdSig_0',
+        'fj_trackSipdSig_0_0',
+        'fj_trackSipdSig_0_1',
         'fj_trackSipdSig_1',
+        'fj_trackSipdSig_1_0',
+        'fj_trackSipdSig_1_1',
         'fj_trackSipdSig_2',
         'fj_trackSipdSig_3',
         'fj_z_ratio',
@@ -135,7 +155,7 @@ def main(args):
         args.ntrain, features, spectators, labels, filetype='Train')
 
     train_data = (X_train, y_train, spects_train)
-    train_filename = 'Data/train_data.pickle'
+    train_filename = 'Data/train_data_v2.pickle'
     with open(train_filename, 'wb') as file:
         pkl.dump(train_data, file)
     print(f"\nTraining data saved to '{train_filename}'")
@@ -145,7 +165,7 @@ def main(args):
         args.ntest, features, spectators, labels, filetype='Test')
 
     test_data = (X_test, y_test, spects_test)
-    test_filename = 'Data/test_data.pickle'
+    test_filename = 'Data/test_data_v2.pickle'
     with open(test_filename, 'wb') as file:
         pkl.dump(test_data, file)
     print(f"\nTest data saved to '{test_filename}'")
