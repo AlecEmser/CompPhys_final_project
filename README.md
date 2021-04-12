@@ -9,6 +9,8 @@
 - [scikit-learn](https://scikit-learn.org/stable/index.html)
 - [keras](https://keras.io/)
 - [tqdm](https://github.com/tqdm/tqdm)
+- [matplotlib](https://matplotlib.org/)
+- [seaborn](https://seaborn.pydata.org/)
 
 ## How to Run
 
@@ -23,6 +25,13 @@ Arguments:
 --ntest     Number of files to include in testing dataset
 
 ```
+
+### Step 2: Inspect Features to Improve Model
+
+ - featureModelling.ipynb
+
+Use Jupyter Notebook to analyze feature importance and correlation. Improve feature selection and re-run sample production before training model.
+
 ### Step 3: Train Models
 ```shell
 python trainNNModel.py -nd 20 -gs 
@@ -34,7 +43,7 @@ Optional Arguments:
 -gs --gridsearch   Run training with exhaustive gridsearch to optimize meta-parameters
 
 ```
-### Step 3: Check Model Accuracy
+### Step 4: Check Model Accuracy
 TBD
 
 ## Authors
