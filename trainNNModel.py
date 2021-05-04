@@ -9,6 +9,7 @@ from keras.layers import Dense, Dropout
 
 
 def parse_args():
+    """Parse command-line arguments for script """
     parser = argparse.ArgumentParser(
         description='Trains and saves Keras NN model.')
     parser.add_argument('-nd',
@@ -25,6 +26,7 @@ def parse_args():
 
 
 def preprocessData(X_all, y_all, debug=False):
+    """Apply pre-processing steps for raw data"""
     # Sample small amount of data for debug purposes
     if debug:
         X_all = X_all[:args.ndebug]
@@ -62,6 +64,8 @@ def buildNN(input_dim=None, optimizer=None, hidden_layers=None, hidden_activatio
 
 
 def trainNN(NN, X_train, y_train, model_search_params=None):
+    """Train neural network with data"""
+    
     if model_search_params is not None:
         # Optimize meta-parameters with grid search and cross-validation
         clf = GridSearchCV(NN,
@@ -112,7 +116,7 @@ def main(args):
         'batch_size': [2, 5],
         'hidden_layers': [3],
         'hidden_activation': ['relu'],
-        'hidden_dropout': [0.2],
+        'hidden_dropout': [0.2, 0.5],
         'hidden_width': [25],
         'optimizer': ['adam']
     }

@@ -2,7 +2,7 @@
 
 ## Dependencies
 - [uproot](https://uproot.readthedocs.io/en/latest/index.html#)
-  - I think that XRootD is automatically installed with this, but just in case you can install that [here](https://pypi.org/project/xrootd/)
+  - I think that XRootD is automatically installed with this, but just in case you can install that [here](https://pypi.org/project/xrootd/) (only works on certain Mac and Linux distributions)
 - [numpy](https://numpy.org/)
 - [pandas](https://pandas.pydata.org/)
 - [pickle](https://docs.python.org/3/library/pickle.html)
@@ -28,7 +28,7 @@ Arguments:
 
 ### Step 2: Inspect Features to Improve Model
 
- - featureModelling.ipynb
+- featureModelling.ipynb
 
 Use Jupyter Notebook to analyze feature importance and correlation. Improve feature selection and re-run sample production before training model.
 
@@ -44,7 +44,10 @@ Optional Arguments:
 
 ```
 ### Step 4: Check Model Accuracy
-TBD
+
+- testNNmodel.ipynb
+
+Use Jupyter Notebook to check accuracy of model on test dataset and plot ROC curve.
 
 ## Authors
 Noah Zipper and Alec Emser

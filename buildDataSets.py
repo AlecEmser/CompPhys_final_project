@@ -7,6 +7,7 @@ from tqdm import trange
 
 
 def parse_args():
+    """Parse command-line arguments for script """
     parser = argparse.ArgumentParser(
         description='Loads and formats input data for Hbb classifier (takes ~45-60s per file).')
     parser.add_argument('--ntrain',
